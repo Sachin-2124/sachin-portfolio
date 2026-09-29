@@ -1,0 +1,147 @@
+{% extends 'portfolio_app/admin/base_admin.html' %}
+
+{% block title %}Dashboard Overview{% endblock %}
+{% block page_title %}<i class="fa-solid fa-chart-pie" style="color:#ef4444;"></i> Dashboard Overview{% endblock %}
+
+{% block content %}
+<style>
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    transition: transform 0.2s ease;
+  }
+  .stat-card:hover { transform: translateY(-3px); }
+  .stat-val { font-size: 2.25rem; font-weight: 900; font-family: 'JetBrains Mono', monospace; line-height: 1; }
+  .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-top: 0.35rem; }
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+  .quick-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media (max-width: 992px) {
+    .quick-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<!-- Top Statistics Cards -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div>
+      <div class="stat-val" style="color:#38bdf8;">{{ total_projects }}</div>
+      <div class="stat-label">Total Projects</div>
+    </div>
+    <div class="stat-icon" style="background:rgba(56, 189, 248, 0.15); color:#38bdf8;">
+      <i class="fa-solid fa-folder-open"></i>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div>
+      <div class="stat-val" style="color:#f43f5e;">{{ unread_messages }}</div>
+      <div class="stat-label">Unread Inquiries</div>
+    </div>
+    <div class="stat-icon" style="background:rgba(244, 63, 94, 0.15); color:#f43f5e;">
+      <i class="fa-solid fa-envelope-open-text"></i>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div>
+      <div class="stat-val" style="color:#34d399;">{{ total_messages }}</div>
+      <div class="stat-label">Total Messages</div>
+    </div>
+    <div class="stat-icon" style="background:rgba(52, 211, 153, 0.15); color:#34d399;">
+      <i class="fa-solid fa-inbox"></i>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div>
+      <div class="stat-val" style="color:#fbbf24;">{{ total_skills }}</div>
+      <div class="stat-label">Active Skills</div>
+    </div>
+    <div class="stat-icon" style="background:rgba(251, 191, 36, 0.15); color:#fbbf24;">
+      <i class="fa-solid fa-microchip"></i>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions & Recent Data -->
+<div class="quick-grid">
+  <!-- Recent Messages Box -->
+  <div class="table-card" style="padding:1.5rem;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+      <h3 style="font-size:1.1rem; font-weight:800;">Recent Contact Inquiries</h3>
+      <a href="{% url 'admin_messages' %}" style="font-size:0.8rem; color:#38bdf8; font-weight:700;">View All →</a>
+    </div>
+
+    {% if recent_messages %}
+      <div style="display:flex; flex-direction:column; gap:0.75rem;">
+        {% for msg in recent_messages %}
+          <div style="padding:0.75rem 1rem; border-radius:0.75rem; background:rgba(2,6,23,0.6); border:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:700; font-size:0.9rem; color:#fff;">{{ msg.name }} <span style="font-size:0.75rem; font-weight:normal; color:#94a3b8;">({{ msg.email }})</span></div>
+              <div style="font-size:0.8rem; color:#cbd5e1; margin-top:0.2rem;">{{ msg.subject }}</div>
+            </div>
+            <div>
+              {% if not msg.is_read %}
+                <span style="background:rgba(239, 68, 68, 0.2); color:#fca5a5; font-size:0.7rem; font-weight:800; padding:0.2rem 0.5rem; border-radius:9999px;">NEW</span>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="color:var(--text-muted); font-size:0.88rem;">No messages received yet.</p>
+    {% endif %}
+  </div>
+
+  <!-- Featured Projects Quick View -->
+  <div class="table-card" style="padding:1.5rem;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+      <h3 style="font-size:1.1rem; font-weight:800;">Active Portfolio Projects</h3>
+      <a href="{% url 'admin_project_add' %}" class="btn-action btn-primary" style="font-size:0.75rem; padding:0.35rem 0.75rem;">
+        <i class="fa-solid fa-plus"></i> Add Project
+      </a>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:0.75rem;">
+      {% for proj in projects %}
+        <div style="padding:0.75rem 1rem; border-radius:0.75rem; background:rgba(2,6,23,0.6); border:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:700; font-size:0.9rem; color:#fff;">{{ proj.title }}</div>
+            <div style="font-size:0.75rem; color:#fca5a5; font-family:'JetBrains Mono', monospace;">{{ proj.tag }}</div>
+          </div>
+          <div style="display:flex; gap:0.5rem;">
+            <a href="{% url 'admin_project_edit' proj.pk %}" class="btn-action btn-secondary" style="font-size:0.75rem; padding:0.3rem 0.6rem;">
+              <i class="fa-solid fa-pen"></i> Edit
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

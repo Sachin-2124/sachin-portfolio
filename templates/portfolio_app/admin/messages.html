@@ -1,0 +1,69 @@
+{% extends 'portfolio_app/admin/base_admin.html' %}
+
+{% block title %}Contact Inquiries{% endblock %}
+{% block page_title %}<i class="fa-solid fa-envelope-open-text" style="color:#ef4444;"></i> Contact Inquiries{% endblock %}
+
+{% block content %}
+<p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">
+  All messages sent via the contact form on your portfolio website are stored here.
+</p>
+
+<div class="table-card">
+  <table>
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Sender Name</th>
+        <th>Email</th>
+        <th>Subject</th>
+        <th>Message Content</th>
+        <th>Received Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for msg in contact_messages %}
+        <tr style="{% if not msg.is_read %}background:rgba(239, 68, 68, 0.05);{% endif %}">
+          <td>
+            {% if msg.is_read %}
+              <span style="color:var(--text-muted); font-size:0.75rem;"><i class="fa-solid fa-envelope-open"></i> Read</span>
+            {% else %}
+              <span style="background:#ef4444; color:#fff; font-size:0.7rem; font-weight:800; padding:0.2rem 0.5rem; border-radius:9999px;">NEW</span>
+            {% endif %}
+          </td>
+          <td style="font-weight:700; color:#fff;">{{ msg.name }}</td>
+          <td>
+            <a href="mailto:{{ msg.email }}" style="color:#38bdf8; text-decoration:underline;">{{ msg.email }}</a>
+          </td>
+          <td style="font-weight:600; color:#cbd5e1;">{{ msg.subject }}</td>
+          <td style="max-width:300px; color:#94a3b8; font-size:0.85rem;">{{ msg.message }}</td>
+          <td style="font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--text-muted);">
+            {{ msg.created_at|date:"d M Y, h:i A" }}
+          </td>
+          <td>
+            <div style="display:flex; gap:0.5rem;">
+              <a href="{% url 'admin_message_toggle_read' msg.pk %}" class="btn-action btn-secondary" style="padding:0.35rem 0.65rem; font-size:0.75rem;" title="Toggle Read Status">
+                {% if msg.is_read %}
+                  <i class="fa-solid fa-envelope"></i>
+                {% else %}
+                  <i class="fa-solid fa-envelope-open"></i>
+                {% endif %}
+              </a>
+              <form method="POST" action="{% url 'admin_message_delete' msg.pk %}" onsubmit="return confirm('Delete message from {{ msg.name }}?');">
+                {% csrf_token %}
+                <button type="submit" class="btn-action btn-danger" style="padding:0.35rem 0.65rem; font-size:0.75rem;">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="7" style="text-align:center; color:var(--text-muted); padding:2.5rem;">No contact messages received yet.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

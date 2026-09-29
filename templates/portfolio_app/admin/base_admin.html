@@ -1,0 +1,348 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Admin Dashboard{% endblock %} | Sachin Lad Portfolio</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #070a13;
+      --bg-sidebar: #0b0f19;
+      --bg-card: rgba(15, 23, 42, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --accent-red: #ef4444;
+      --accent-emerald: #10b981;
+      --accent-cyan: #06b6d4;
+      --accent-amber: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* Sidebar */
+    .admin-sidebar {
+      width: 260px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      padding: 1.5rem 1rem;
+    }
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.05rem;
+      font-weight: 800;
+      padding: 0.5rem 0.5rem 1.5rem 0.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .sidebar-nav {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-top: 1.5rem;
+    }
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fff;
+      border-left: 3px solid var(--accent-red);
+    }
+    .sidebar-footer {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      border-radius: 0.5rem;
+      color: #f87171;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      transition: all 0.2s;
+    }
+    .btn-logout:hover {
+      background: var(--accent-red);
+      color: #fff;
+    }
+
+    /* Main Content */
+    .admin-main {
+      margin-left: 260px;
+      flex: 1;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .admin-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .page-title {
+      font-size: 1.6rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .view-site-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      background: #1e293b;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #38bdf8;
+      transition: all 0.2s;
+    }
+    .view-site-btn:hover {
+      background: #334155;
+      color: #fff;
+    }
+
+    /* Messages & Alerts */
+    .alert-box {
+      padding: 0.85rem 1.25rem;
+      border-radius: 0.75rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .alert-success { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #6ee7b7; }
+    .alert-error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
+    .alert-info { background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.4); color: #7dd3fc; }
+
+    /* Tables */
+    .table-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    th {
+      padding: 1rem 1.25rem;
+      background: rgba(2, 6, 23, 0.8);
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.88rem;
+      vertical-align: middle;
+    }
+    tr:hover td {
+      background: rgba(30, 41, 59, 0.4);
+    }
+
+    /* Form Controls */
+    .form-control {
+      width: 100%;
+      background: rgba(2, 6, 23, 0.8);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.6rem;
+      padding: 0.75rem 1rem;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--accent-red);
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.25rem;
+      border-radius: 0.6rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent-red); color: #fff; }
+    .btn-primary:hover { background: #dc2626; transform: translateY(-1px); }
+    .btn-danger { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .btn-danger:hover { background: var(--accent-red); color: #fff; }
+    .btn-secondary { background: #1e293b; color: #fff; border: 1px solid var(--border-subtle); }
+    .btn-secondary:hover { background: #334155; }
+    
+    @media (max-width: 900px) {
+      .admin-sidebar { width: 70px; padding: 1rem 0.5rem; }
+      .sidebar-brand span, .sidebar-nav span, .btn-logout span { display: none; }
+      .admin-main { margin-left: 70px; padding: 1rem; }
+    }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Admin Sidebar -->
+  <aside class="admin-sidebar">
+    <div>
+      <div class="sidebar-brand">
+        <i class="fa-solid fa-shield-halved" style="color:#ef4444; font-size:1.3rem;"></i>
+        <span>Admin Panel</span>
+      </div>
+
+      <ul class="sidebar-nav">
+        <li>
+          <a href="{% url 'admin_dashboard' %}" class="{% if active_page == 'dashboard' %}active{% endif %}">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Overview</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'admin_projects' %}" class="{% if active_page == 'projects' %}active{% endif %}">
+            <i class="fa-solid fa-folder-open"></i>
+            <span>Projects</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'admin_messages' %}" class="{% if active_page == 'messages' %}active{% endif %}">
+            <i class="fa-solid fa-envelope-open-text"></i>
+            <span>Messages</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'admin_profile' %}" class="{% if active_page == 'profile' %}active{% endif %}">
+            <i class="fa-solid fa-id-card"></i>
+            <span>Profile & Bio</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'admin_education' %}" class="{% if active_page == 'education' %}active{% endif %}">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>Education</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'admin_skills' %}" class="{% if active_page == 'skills' %}active{% endif %}">
+            <i class="fa-solid fa-code"></i>
+            <span>Tech Skills</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <a href="/" target="_blank" class="view-site-btn" style="width:100%; justify-content:center;">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <span>Live Portfolio</span>
+      </a>
+      <a href="{% url 'admin_logout' %}" class="btn-logout">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1 class="page-title">
+        {% block page_title %}Dashboard{% endblock %}
+      </h1>
+      <div style="display:flex; align-items:center; gap:1rem;">
+        <span style="font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:var(--text-muted);">
+          Logged in as: <strong style="color:#10b981;">{{ request.user.username }}</strong>
+        </span>
+        <a href="/" target="_blank" class="view-site-btn">
+          <i class="fa-solid fa-globe"></i>
+          <span>View Site</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Flash Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert-box alert-{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% else %}info{% endif %}">
+          <i class="fa-solid fa-bell"></i>
+          <span>{{ message }}</span>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Page Content -->
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

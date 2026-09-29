@@ -1,0 +1,215 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PG & Hostel Management System — Live Interactive Bed & Rent Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #070a13; color: #f8fafc; min-height: 100vh; }
+    a { text-decoration: none; color: inherit; }
+
+    .demo-bar {
+      background: #0f172a;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 9999px;
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #10b981;
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .back-btn:hover { background: #334155; color: #fff; }
+
+    .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
+
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .room-card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+    }
+    .room-title { font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 0.75rem; display: flex; justify-content: space-between; }
+    
+    .bed-badge {
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .bed-occupied { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; }
+    .bed-available { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #6ee7b7; cursor: pointer; }
+    .bed-available:hover { background: rgba(16, 185, 129, 0.3); }
+
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      background: rgba(15, 23, 42, 0.85);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    .ledger-table th { background: #0f172a; padding: 0.85rem 1rem; font-size: 0.75rem; color: #94a3b8; text-align: left; }
+    .ledger-table td { padding: 0.85rem 1rem; border-top: 1px solid rgba(255, 255, 255, 0.06); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+  <div class="demo-bar">
+    <a href="/#projects" class="back-btn">
+      <i class="fa-solid fa-arrow-left"></i>
+      <span>Back to Portfolio</span>
+    </a>
+    <div style="font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:#10b981; font-weight:700;">
+      ⚡ LIVE DEMO: Paying Guest (PG) & Tenant Management Portal
+    </div>
+    <a href="https://github.com/Sachin-2124" target="_blank" class="back-btn">
+      <i class="fa-brands fa-github"></i>
+      <span>GitHub Profile</span>
+    </a>
+  </div>
+
+  <div class="container">
+    <div style="background:linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(2, 6, 23, 0.9) 100%); border:1px solid rgba(16, 185, 129, 0.3); border-radius:1.25rem; padding:2rem; text-align:center; margin-bottom:2rem;">
+      <h1 style="font-size:2.2rem; font-weight:900; margin-bottom:0.5rem;">PG Accommodation & Room Allocator</h1>
+      <p style="color:#cbd5e1; font-size:0.95rem;">Interactive Bed Matrix, Rent Ledger, & Tenant Management Suite</p>
+    </div>
+
+    <!-- Interactive Room Matrix -->
+    <h3 style="font-size:1.25rem; font-weight:800; margin-bottom:0.5rem;">Floor 1 & 2 Room Availability</h3>
+    <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:1rem;">Click any <span style="color:#10b981; font-weight:700;">[AVAILABLE]</span> bed to allocate to a new paying guest.</p>
+
+    <div class="matrix-grid">
+      <!-- Room 101 -->
+      <div class="room-card">
+        <div class="room-title">
+          <span>Room 101 (2-Sharing AC)</span>
+          <span style="font-size:0.8rem; color:#10b981; font-family:'JetBrains Mono', monospace;">₹8,000/mo</span>
+        </div>
+        <div class="bed-badge bed-occupied">
+          <span>Bed A (Sachin - IT Professional)</span>
+          <span><i class="fa-solid fa-lock"></i> Occupied</span>
+        </div>
+        <div class="bed-badge bed-available" onclick="allocateBed('Room 101 - Bed B', 8000, this)">
+          <span>Bed B</span>
+          <span><i class="fa-solid fa-plus"></i> Allocate</span>
+        </div>
+      </div>
+
+      <!-- Room 102 -->
+      <div class="room-card">
+        <div class="room-title">
+          <span>Room 102 (3-Sharing)</span>
+          <span style="font-size:0.8rem; color:#10b981; font-family:'JetBrains Mono', monospace;">₹6,000/mo</span>
+        </div>
+        <div class="bed-badge bed-occupied">
+          <span>Bed A (Rahul - MCA Student)</span>
+          <span><i class="fa-solid fa-lock"></i> Occupied</span>
+        </div>
+        <div class="bed-badge bed-occupied">
+          <span>Bed B (Amit - Software Eng)</span>
+          <span><i class="fa-solid fa-lock"></i> Occupied</span>
+        </div>
+        <div class="bed-badge bed-available" onclick="allocateBed('Room 102 - Bed C', 6000, this)">
+          <span>Bed C</span>
+          <span><i class="fa-solid fa-plus"></i> Allocate</span>
+        </div>
+      </div>
+
+      <!-- Room 201 -->
+      <div class="room-card">
+        <div class="room-title">
+          <span>Room 201 (Single Deluxe AC)</span>
+          <span style="font-size:0.8rem; color:#10b981; font-family:'JetBrains Mono', monospace;">₹12,000/mo</span>
+        </div>
+        <div class="bed-badge bed-available" onclick="allocateBed('Room 201 - Bed A', 12000, this)">
+          <span>Bed A</span>
+          <span><i class="fa-solid fa-plus"></i> Allocate</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rent Ledger -->
+    <h3 style="font-size:1.25rem; font-weight:800; margin-top:3rem; margin-bottom:0.5rem;">Live Rent Collection Ledger</h3>
+    <table class="ledger-table">
+      <thead>
+        <tr>
+          <th>Tenant Name</th>
+          <th>Room Allocated</th>
+          <th>Monthly Rent</th>
+          <th>Payment Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="ledger-body">
+        <tr>
+          <td style="font-weight:700; color:#fff;">Sachin Lad</td>
+          <td>Room 101 (Bed A)</td>
+          <td style="font-family:'JetBrains Mono', monospace;">₹8,000</td>
+          <td><span style="background:rgba(16, 185, 129, 0.15); color:#6ee7b7; padding:0.2rem 0.5rem; border-radius:0.3rem; font-size:0.75rem; font-weight:800;">PAID (OCT)</span></td>
+          <td><button style="background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.1); border-radius:0.4rem; padding:0.3rem 0.6rem; font-size:0.75rem; cursor:pointer;" onclick="alert('Downloading Rent Receipt Invoice PDF...')"><i class="fa-solid fa-receipt"></i> Invoice</button></td>
+        </tr>
+        <tr>
+          <td style="font-weight:700; color:#fff;">Rahul Sharma</td>
+          <td>Room 102 (Bed A)</td>
+          <td style="font-family:'JetBrains Mono', monospace;">₹6,000</td>
+          <td><span style="background:rgba(16, 185, 129, 0.15); color:#6ee7b7; padding:0.2rem 0.5rem; border-radius:0.3rem; font-size:0.75rem; font-weight:800;">PAID (OCT)</span></td>
+          <td><button style="background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.1); border-radius:0.4rem; padding:0.3rem 0.6rem; font-size:0.75rem; cursor:pointer;" onclick="alert('Downloading Rent Receipt Invoice PDF...')"><i class="fa-solid fa-receipt"></i> Invoice</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function allocateBed(bedName, rent, el) {
+      const tenant = prompt(`Enter Tenant Name to allocate ${bedName} (Rent: ₹${rent}/mo):`, 'Pooja Patel');
+      if (tenant) {
+        el.className = 'bed-badge bed-occupied';
+        el.innerHTML = `<span>${bedName} (${tenant})</span><span><i class="fa-solid fa-lock"></i> Occupied</span>`;
+        el.onclick = null;
+
+        const tbody = document.getElementById('ledger-body');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-weight:700; color:#fff;">${tenant}</td>
+          <td>${bedName}</td>
+          <td style="font-family:'JetBrains Mono', monospace;">₹${rent.toLocaleString('en-IN')}</td>
+          <td><span style="background:rgba(56, 189, 248, 0.15); color:#38bdf8; padding:0.2rem 0.5rem; border-radius:0.3rem; font-size:0.75rem; font-weight:800;">NEW ALLOCATION</span></td>
+          <td><button style="background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.1); border-radius:0.4rem; padding:0.3rem 0.6rem; font-size:0.75rem; cursor:pointer;" onclick="alert('Downloading Rent Receipt Invoice PDF...')"><i class="fa-solid fa-receipt"></i> Invoice</button></td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stadium Management System — Live Interactive Match Booking Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #070a13; color: #f8fafc; min-height: 100vh; }
+    a { text-decoration: none; color: inherit; }
+
+    .demo-bar {
+      background: #0f172a;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 9999px;
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ef4444;
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .back-btn:hover { background: #334155; color: #fff; }
+
+    .container { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; }
+
+    .match-header {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(2, 6, 23, 0.9) 100%);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 1.25rem;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.6);
+    }
+    .stadium-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #fca5a5;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+      display: inline-block;
+      margin-bottom: 0.75rem;
+    }
+
+    .booking-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 2rem;
+    }
+    @media (max-width: 900px) { .booking-grid { grid-template-columns: 1fr; } }
+
+    .tier-card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+    }
+    .tier-card:hover, .tier-card.selected {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .bill-panel {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1.25rem;
+      padding: 1.75rem;
+      height: fit-content;
+    }
+    .btn-ticket {
+      width: 100%;
+      padding: 0.85rem;
+      border-radius: 0.6rem;
+      background: #ef4444;
+      color: #fff;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.2s;
+    }
+    .btn-ticket:hover { background: #dc2626; }
+
+    .qr-ticket-box {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 1rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="demo-bar">
+    <a href="/#projects" class="back-btn">
+      <i class="fa-solid fa-arrow-left"></i>
+      <span>Back to Portfolio</span>
+    </a>
+    <div style="font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:#f87171; font-weight:700;">
+      ⚡ LIVE DEMO: Stadium Operations & Ticketing Management System
+    </div>
+    <a href="https://github.com/Sachin-2124" target="_blank" class="back-btn">
+      <i class="fa-brands fa-github"></i>
+      <span>GitHub Profile</span>
+    </a>
+  </div>
+
+  <div class="container">
+    <div class="match-header">
+      <span class="stadium-badge">🏟️ NARENDRA MODI STADIUM, AHMEDABAD</span>
+      <h1 style="font-size:2.2rem; font-weight:900; margin-bottom:0.5rem;">Match Day Ticketing & Access Portal</h1>
+      <p style="color:#cbd5e1; font-size:0.95rem;">Premier League Fixture: India vs Australia (T20 Championship Series)</p>
+    </div>
+
+    <div class="booking-grid">
+      <!-- Seating Tiers -->
+      <div>
+        <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:1rem;">Select Stadium Stand & Category</h3>
+
+        <div class="tier-card selected" onclick="selectTier('VIP Corporate Box & Lounge', 8500, this)">
+          <div>
+            <div style="font-weight:800; font-size:1rem; color:#fff;">VIP Corporate Box & Lounge</div>
+            <div style="font-size:0.8rem; color:#94a3b8;">Level 3 • Unlimited Food & Hospitality • AC Lounge</div>
+          </div>
+          <div style="font-family:'JetBrains Mono', monospace; font-weight:800; color:#ef4444;">₹8,500</div>
+        </div>
+
+        <div class="tier-card" onclick="selectTier('Club Pavilion Stand (Covered)', 4200, this)">
+          <div>
+            <div style="font-weight:800; font-size:1rem; color:#fff;">Club Pavilion Stand (Covered)</div>
+            <div style="font-size:0.8rem; color:#94a3b8;">Level 2 • Prime Pitch View • Fast-track entry Gate 4</div>
+          </div>
+          <div style="font-family:'JetBrains Mono', monospace; font-weight:800; color:#ef4444;">₹4,200</div>
+        </div>
+
+        <div class="tier-card" onclick="selectTier('East Stand (Cheering Zone)', 1800, this)">
+          <div>
+            <div style="font-weight:800; font-size:1rem; color:#fff;">East Stand (Cheering Zone)</div>
+            <div style="font-size:0.8rem; color:#94a3b8;">Level 1 • High Energy • Entry Gate 7</div>
+          </div>
+          <div style="font-family:'JetBrains Mono', monospace; font-weight:800; color:#ef4444;">₹1,800</div>
+        </div>
+
+        <div class="tier-card" onclick="selectTier('West Stand Upper Tier', 1200, this)">
+          <div>
+            <div style="font-weight:800; font-size:1rem; color:#fff;">West Stand Upper Tier</div>
+            <div style="font-size:0.8rem; color:#94a3b8;">Level 2 • Wide Angle Stadium Panorama</div>
+          </div>
+          <div style="font-family:'JetBrains Mono', monospace; font-weight:800; color:#ef4444;">₹1,200</div>
+        </div>
+      </div>
+
+      <!-- Live Billing & QR Generation -->
+      <div>
+        <div class="bill-panel">
+          <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:0.75rem;">
+            Booking Summary
+          </h3>
+
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.78rem; font-family:'JetBrains Mono', monospace; color:#94a3b8; margin-bottom:0.3rem;">Fan Name</label>
+            <input type="text" id="fan-name" value="Sachin Lad" style="width:100%; background:rgba(2,6,23,0.8); border:1px solid rgba(255,255,255,0.1); border-radius:0.5rem; padding:0.6rem 0.8rem; color:#fff; outline:none;" />
+          </div>
+
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.78rem; font-family:'JetBrains Mono', monospace; color:#94a3b8; margin-bottom:0.3rem;">Number of Seats</label>
+            <input type="number" id="seat-qty" value="2" min="1" max="6" oninput="calcTotal()" style="width:100%; background:rgba(2,6,23,0.8); border:1px solid rgba(255,255,255,0.1); border-radius:0.5rem; padding:0.6rem 0.8rem; color:#fff; outline:none;" />
+          </div>
+
+          <div style="background:rgba(2,6,23,0.7); border-radius:0.5rem; padding:1rem; margin-top:1rem;">
+            <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:#94a3b8; margin-bottom:0.4rem;">
+              <span>Selected Stand:</span>
+              <span id="bill-stand" style="color:#fff; font-weight:700;">VIP Corporate Box</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:#94a3b8; margin-bottom:0.4rem;">
+              <span>Price per seat:</span>
+              <span id="bill-price" style="font-family:'JetBrains Mono', monospace;">₹8,500</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:1.1rem; font-weight:900; color:#ef4444; border-top:1px solid rgba(255,255,255,0.1); padding-top:0.6rem; margin-top:0.6rem;">
+              <span>Total Payable:</span>
+              <span id="bill-total" style="font-family:'JetBrains Mono', monospace;">₹17,000</span>
+            </div>
+          </div>
+
+          <button class="btn-ticket" onclick="generateTicket()">
+            <i class="fa-solid fa-qrcode"></i> Issue QR Match Ticket
+          </button>
+
+          <!-- QR Result Preview -->
+          <div id="qr-box" class="qr-ticket-box">
+            <h4 style="font-weight:900; font-size:1.1rem; color:#ef4444;">🎟️ OFFICIAL E-TICKET ISSUED</h4>
+            <div style="font-size:0.85rem; font-weight:700; margin:0.5rem 0;" id="qr-fan">Fan: Sachin Lad</div>
+            <div style="font-size:0.75rem; color:#64748b;" id="qr-seats">Seats: Stand Level 3 (2 Seats)</div>
+            <div style="margin:1rem 0;">
+              <i class="fa-solid fa-qrcode" style="font-size:5rem; color:#0f172a;"></i>
+            </div>
+            <div style="font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:#10b981; font-weight:800;">
+              VERIFIED ENTRY • GATE 4
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let unitPrice = 8500;
+    let standName = 'VIP Corporate Box & Lounge';
+
+    function selectTier(name, price, el) {
+      document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      unitPrice = price;
+      standName = name;
+      document.getElementById('bill-stand').textContent = name;
+      document.getElementById('bill-price').textContent = '₹' + price.toLocaleString('en-IN');
+      calcTotal();
+    }
+
+    function calcTotal() {
+      const qty = parseInt(document.getElementById('seat-qty').value) || 1;
+      const total = qty * unitPrice;
+      document.getElementById('bill-total').textContent = '₹' + total.toLocaleString('en-IN');
+    }
+
+    function generateTicket() {
+      const name = document.getElementById('fan-name').value || 'Guest';
+      const qty = document.getElementById('seat-qty').value || 1;
+      document.getElementById('qr-fan').textContent = 'Fan: ' + name;
+      document.getElementById('qr-seats').textContent = standName + ` (${qty} Seat${qty > 1 ? 's' : ''})`;
+      document.getElementById('qr-box').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

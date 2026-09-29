@@ -1,0 +1,73 @@
+{% extends 'portfolio_app/admin/base_admin.html' %}
+
+{% block title %}Manage Projects{% endblock %}
+{% block page_title %}<i class="fa-solid fa-folder-open" style="color:#ef4444;"></i> Manage Projects{% endblock %}
+
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+  <p style="color:var(--text-muted); font-size:0.9rem;">Add, update, or remove portfolio projects, GitHub links, and live demos.</p>
+  <a href="{% url 'admin_project_add' %}" class="btn-action btn-primary">
+    <i class="fa-solid fa-plus"></i> Add New Project
+  </a>
+</div>
+
+<div class="table-card">
+  <table>
+    <thead>
+      <tr>
+        <th>Order</th>
+        <th>Project Title</th>
+        <th>Category / Tag</th>
+        <th>GitHub Link</th>
+        <th>Featured</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for proj in projects %}
+        <tr>
+          <td style="font-family:'JetBrains Mono', monospace; font-weight:800; color:#cbd5e1;">#{{ proj.order }}</td>
+          <td>
+            <div style="font-weight:700; color:#fff;">{{ proj.title }}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);">{{ proj.subtitle }}</div>
+          </td>
+          <td><span style="background:rgba(239, 68, 68, 0.15); color:#fca5a5; padding:0.25rem 0.5rem; border-radius:0.4rem; font-size:0.75rem; font-family:'JetBrains Mono', monospace;">{{ proj.tag }}</span></td>
+          <td>
+            {% if proj.github_url %}
+              <a href="{{ proj.github_url }}" target="_blank" style="color:#38bdf8; font-size:0.8rem; text-decoration:underline;">
+                <i class="fa-brands fa-github"></i> View Repo
+              </a>
+            {% else %}
+              <span style="color:var(--text-muted); font-size:0.8rem;">None</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if proj.is_featured %}
+              <span style="color:#10b981; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Yes</span>
+            {% else %}
+              <span style="color:var(--text-muted);">No</span>
+            {% endif %}
+          </td>
+          <td>
+            <div style="display:flex; gap:0.5rem;">
+              <a href="{% url 'admin_project_edit' proj.pk %}" class="btn-action btn-secondary" style="padding:0.4rem 0.75rem; font-size:0.8rem;">
+                <i class="fa-solid fa-pen"></i> Edit
+              </a>
+              <form method="POST" action="{% url 'admin_project_delete' proj.pk %}" onsubmit="return confirm('Are you sure you want to delete {{ proj.title }}?');">
+                {% csrf_token %}
+                <button type="submit" class="btn-action btn-danger" style="padding:0.4rem 0.75rem; font-size:0.8rem;">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">No projects found. Click "Add New Project" to create one.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

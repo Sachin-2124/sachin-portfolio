@@ -1,0 +1,94 @@
+{% extends 'portfolio_app/admin/base_admin.html' %}
+
+{% block title %}Profile Settings{% endblock %}
+{% block page_title %}<i class="fa-solid fa-id-card" style="color:#ef4444;"></i> Profile & Information{% endblock %}
+
+{% block content %}
+<div class="table-card" style="padding:2rem; max-width:800px;">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div class="form-group">
+        <label class="form-label" for="{{ form.name.id_for_label }}">Full Name *</label>
+        {{ form.name }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.title.id_for_label }}">Professional Title *</label>
+        {{ form.title }}
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div class="form-group">
+        <label class="form-label" for="{{ form.degree_badge.id_for_label }}">Degree Badge</label>
+        {{ form.degree_badge }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.status_text.id_for_label }}">Availability Status</label>
+        {{ form.status_text }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.tagline.id_for_label }}">Hero Tagline</label>
+      {{ form.tagline }}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.bio.id_for_label }}">Career Objective & Bio *</label>
+      {{ form.bio }}
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div class="form-group">
+        <label class="form-label" for="{{ form.email.id_for_label }}">Email Address *</label>
+        {{ form.email }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.phone.id_for_label }}">Phone Number *</label>
+        {{ form.phone }}
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div class="form-group">
+        <label class="form-label" for="{{ form.whatsapp.id_for_label }}">WhatsApp Number (with country code, e.g. 917487095241)</label>
+        {{ form.whatsapp }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.address.id_for_label }}">Location / City</label>
+        {{ form.address }}
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div class="form-group">
+        <label class="form-label" for="{{ form.linkedin_url.id_for_label }}">LinkedIn URL</label>
+        {{ form.linkedin_url }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.github_url.id_for_label }}">GitHub Profile URL</label>
+        {{ form.github_url }}
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem;">
+      <div class="form-group">
+        <label class="form-label" for="{{ form.profile_image.id_for_label }}">Upload New Profile Picture</label>
+        {{ form.profile_image }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.resume_file.id_for_label }}">Upload Resume PDF</label>
+        {{ form.resume_file }}
+      </div>
+    </div>
+
+    <div style="margin-top:2rem;">
+      <button type="submit" class="btn-action btn-primary" style="padding:0.75rem 1.75rem;">
+        <i class="fa-solid fa-floppy-disk"></i> Update Profile & Photos
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

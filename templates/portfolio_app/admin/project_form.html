@@ -1,0 +1,83 @@
+{% extends 'portfolio_app/admin/base_admin.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block page_title %}<i class="fa-solid fa-folder-plus" style="color:#ef4444;"></i> {{ title }}{% endblock %}
+
+{% block content %}
+<div class="table-card" style="padding:2rem; max-width:800px;">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div class="form-group">
+        <label class="form-label" for="{{ form.title.id_for_label }}">Project Title *</label>
+        {{ form.title }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.tag.id_for_label }}">Tag / Category *</label>
+        {{ form.tag }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.subtitle.id_for_label }}">Subtitle (Short Tech Summary)</label>
+      {{ form.subtitle }}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.description.id_for_label }}">Project Detailed Description *</label>
+      {{ form.description }}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.features.id_for_label }}">Key Features (Separate with semicolons ;)</label>
+      {{ form.features }}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.tech_stack.id_for_label }}">Tech Stack (Comma-separated)</label>
+      {{ form.tech_stack }}
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div class="form-group">
+        <label class="form-label" for="{{ form.github_url.id_for_label }}">GitHub Repository URL</label>
+        {{ form.github_url }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.live_url.id_for_label }}">Live Preview URL</label>
+        {{ form.live_url }}
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; align-items:center;">
+      <div class="form-group">
+        <label class="form-label" for="{{ form.date_label.id_for_label }}">Date / Version Label</label>
+        {{ form.date_label }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.order.id_for_label }}">Display Order</label>
+        {{ form.order }}
+      </div>
+      <div class="form-group" style="display:flex; align-items:center; gap:0.5rem; margin-top:1.2rem;">
+        {{ form.is_featured }}
+        <label class="form-label" for="{{ form.is_featured.id_for_label }}" style="margin:0; cursor:pointer;">Show on Portfolio</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.image.id_for_label }}">Project Screenshot / Banner</label>
+      {{ form.image }}
+    </div>
+
+    <div style="display:flex; gap:1rem; margin-top:1.5rem;">
+      <button type="submit" class="btn-action btn-primary" style="padding:0.75rem 1.5rem;">
+        <i class="fa-solid fa-floppy-disk"></i> Save Project
+      </button>
+      <a href="{% url 'admin_projects' %}" class="btn-action btn-secondary" style="padding:0.75rem 1.5rem;">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

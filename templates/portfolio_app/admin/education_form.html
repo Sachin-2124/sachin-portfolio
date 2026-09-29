@@ -1,0 +1,64 @@
+{% extends 'portfolio_app/admin/base_admin.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block page_title %}<i class="fa-solid fa-graduation-cap" style="color:#ef4444;"></i> {{ title }}{% endblock %}
+
+{% block content %}
+<div class="table-card" style="padding:2rem; max-width:700px;">
+  <form method="POST">
+    {% csrf_token %}
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div class="form-group">
+        <label class="form-label" for="{{ form.degree.id_for_label }}">Degree Title *</label>
+        {{ form.degree }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.category.id_for_label }}">Category Filter *</label>
+        {{ form.category }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.institution.id_for_label }}">Institution / University *</label>
+      {{ form.institution }}
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div class="form-group">
+        <label class="form-label" for="{{ form.duration.id_for_label }}">Duration (e.g. Aug 2024 - Apr 2026)</label>
+        {{ form.duration }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.order.id_for_label }}">Display Order</label>
+        {{ form.order }}
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div class="form-group">
+        <label class="form-label" for="{{ form.score_label.id_for_label }}">Score Label (e.g. CGPA / Percentage)</label>
+        {{ form.score_label }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.score_value.id_for_label }}">Score Value (e.g. 7.0 / 10)</label>
+        {{ form.score_value }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.curriculum.id_for_label }}">Curriculum Highlights (Separate with semicolons ;)</label>
+      {{ form.curriculum }}
+    </div>
+
+    <div style="display:flex; gap:1rem; margin-top:1.5rem;">
+      <button type="submit" class="btn-action btn-primary" style="padding:0.75rem 1.5rem;">
+        <i class="fa-solid fa-floppy-disk"></i> Save Record
+      </button>
+      <a href="{% url 'admin_education' %}" class="btn-action btn-secondary" style="padding:0.75rem 1.5rem;">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}
